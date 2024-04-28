@@ -14,7 +14,7 @@ const Login = () => {
       <div>
         <h2 className="text-xl font-bold">Sign Up -</h2>
         <form>
-          <p className="bg-red-600 w-1/2 mt-5 mb-5 rounded p-1.5 text-white mx-auto">
+          <p className="bg-red-500 w-1/2 mt-5 mb-5 rounded p-1.5 text-white mx-auto">
             This is an error msg
           </p>
 
