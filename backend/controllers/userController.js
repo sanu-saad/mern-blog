@@ -12,7 +12,7 @@ const generateToken = async(userId) => {
     }
 }
 
-const register = asyncHandler(async(req,res,next) => {
+const register = asyncHandler(async(req,res) => {
   
      const {name,email,password,role} = req.body;
      if(!name || !email || !password || !role){
@@ -31,7 +31,7 @@ const register = asyncHandler(async(req,res,next) => {
 })
 
 
-const login = asyncHandler(async(req,res,next) => {
+const login = asyncHandler(async(req,res) => {
     const {email,password,role} = req.body;
     if(!email || !password ||!role){
         throw new ApiError(400,"All fields are required")
@@ -61,4 +61,17 @@ const login = asyncHandler(async(req,res,next) => {
         message : " user loggedIn successfully"
     })
 })
-export {register,login}
+
+const logout = asyncHandler(async(req,res) => {
+    User.findByIdAndUpdate(
+        req.user._id,
+        {
+        $set : {
+            accessToken : undefined
+        }
+    },
+{
+    new:true
+})
+})
+export {register,login,logout}
