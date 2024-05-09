@@ -1,33 +1,34 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import connDB from './DB/conn.js';
-import upload from 'express-fileupload';
-import path from 'path';
-import { fileURLToPath } from 'url';
-const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
-const __dirname = path.dirname(__filename); // get the name of the directory
+import cors from 'cors'
+import cookieParser from 'cookie-parser';
+// import {ApiError} from './middlewares/ApiError.js';
 
 const PORT = process.env.PORT || 8000;
 dotenv.config();
 const app = express()
 
 //routes
-import authRoutes from './routes/authRoutes.js'
-import { errorHandler, notFound } from './middlewares/errorMiddleware.js';
+import userRoutes from './routes/userRoutes.js'
+// import postRoutes from './routes/postRoutes.js'
 
 //middleware
+app.use(cookieParser())
 app.use(express.json())
-app.use(upload())
-app.use('/uploads',express.static(__dirname + '/uploads'))
+app.use(express.urlencoded({extended:true}))
+app.use(cors())
 
 //DB
 connDB()
 
-//routes
-app.use("/api/v1/auth",authRoutes)
+// app.use(ApiError)
 
-app.use(notFound)
-app.use(errorHandler)
+//routes
+app.use("/api/v1",userRoutes);
+// app.use("/api/v1/post",postRoutes);
+
+
 
 app.listen(PORT, ()=> {
     console.log('server running')
