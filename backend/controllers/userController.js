@@ -30,7 +30,6 @@ const register = asyncHandler(async(req,res) => {
   
 })
 
-
 const login = asyncHandler(async(req,res) => {
     const {email,password,role} = req.body;
     if(!email || !password ||!role){
@@ -63,15 +62,32 @@ const login = asyncHandler(async(req,res) => {
 })
 
 const logout = asyncHandler(async(req,res) => {
-    User.findByIdAndUpdate(
-        req.user._id,
-        {
-        $set : {
-            accessToken : undefined
-        }
-    },
-{
-    new:true
+  const userLogout =   User.findByIdAndUpdate( req.user._id,
+       
+        { $set : { accessToken : undefined  } },{ new:true} 
+)
+    if(userLogout){
+        return res.status(200).send({
+            message:"Logout successfull"
+        })
+    }
 })
+
+const getProfile = asyncHandler(async(req,res) => {
+    const user = req.user
+    if(!user){
+        throw new ApiError(401,"Not Authanticated")
+    }
+    res.status(200).send({
+        user
+    })
 })
-export {register,login,logout}
+
+const getAuthors = asyncHandler(async(req,res) => {
+    const authors = await User.find({role:"Author"})
+    res.status(200).send({
+        success : true,
+        authors
+    })
+})
+export {register,login,logout,getProfile,getAuthors}
